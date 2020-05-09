@@ -1,0 +1,17 @@
+
+;Practical 1 
+
+jmp start
+
+;data
+
+
+;code
+start: LXI H,2500
+MOV A,M
+INX H
+SUB M
+INX H
+MOV M,A
+STA 2502
+RST 5

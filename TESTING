@@ -1,0 +1,13 @@
+
+;<Program title>
+
+jmp start
+
+start:  LXI H,2502
+	MOV A,H
+	;INX H
+	;ADD M
+	;INX H
+	;MOV M,A
+	STA 2503
+	HLT

@@ -1,0 +1,45 @@
+jmp START		; DATA STORED FROM 2080 TO 2096
+			; RESULT STORED FROM 2100 TO 2102
+START:  MVI B,00 	; counts carries
+	MVI C,08 	; runs 8 times
+	LXI H,2080 	; points to lower byte of first 16 bit no
+	MVI A,00
+
+	;/LOOP 1 TO ADD ALL LOWER BYTES/;
+	
+LOOP:	ADD M 
+	JNC SKIP 	; if no carry, skip
+	INR B 		; else increment b
+
+SKIP:	INX H
+	INX H
+	DCR C 
+	JNZ LOOP
+ 
+	STA 2100 	; STORE THE LOWER BYTE
+	MOV A,B		; MOVE THE SUM OF CARRIES TO A
+	STA 2101	; STORE THE SUM OF CARRIES FOR NOW
+	MVI B,00
+	LXI H,2081 	; points to upper byte of first 16 bit no
+	MVI C,08
+	MVI A,00
+
+	;/LOOP 2 TO ADD ALL UPPER BYTES/;
+	
+LOOP2:	ADD M 
+
+	JNC SKIP2 	; if no carry, skip
+	INR B 		; else increment b
+
+SKIP2:	INX H
+	INX H
+	DCR C 
+
+	JNZ LOOP2
+	
+	LXI H,2101
+	ADD M 
+	STA 2101 	; STORE THE UPPER BYTE
+	MOV A,B
+	STA 2102	; STORE THE FINAL CARRY
+HLT
