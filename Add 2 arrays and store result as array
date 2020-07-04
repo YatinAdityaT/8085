@@ -1,0 +1,69 @@
+;Add 2 arrays having ten 8-bit numbers each and generate a third array of result.
+; It is necessary to add the first element of array 1 with the first element of array-2
+; and so on. The starting addresses of array l, array2 and array3are 2200H, 2300H and 2400H,
+; respectively.
+
+JMP START
+
+      ;STORING VALUES;
+
+	;ARRAY1;
+START:	MVI A,09;
+	STA 2200
+	STA 2201
+	STA 2202
+	STA 2203
+	STA 2206
+	STA 2209
+
+	MVI A,02;
+	STA 2204
+	STA 2205
+	STA 2207
+	STA 2208
+
+	;ARRAY2;
+	MVI A,03;
+	STA 2300
+	STA 2301
+	STA 2302
+	STA 2303
+	STA 2306
+	STA 2309
+
+	MVI A,01;
+	STA 2304
+	STA 2305
+	STA 2307
+	STA 2308
+	
+	MVI A,00; CLEAR A
+	MVI B,10; NUMBER OF ELEMENTS
+	MVI C,0; CLEAR C
+	MVI D,0; CLEAR D
+	LXI H,2200; POINT TO FIRST ELEMENT OF ARR1
+
+
+
+REPEAT: PUSH H; STORE M'S ADDRESS
+	MOV C,M; STORE M
+	CALL CORRECT
+	MOV A,M;
+	ADD C
+	MOV C,A; SAVE RESULT
+	CALL CORRECT
+	MOV M,C; STORE ANSWER
+	DCR B
+	POP H
+	INX H
+	JNZ REPEAT
+	HLT	
+	
+CORRECT: MVI E,100;
+LOOP: 	INX H; INCREMENT HL PAIR VALUE
+	DCR E
+	JNZ LOOP
+	RET
+
+
+
