@@ -1,0 +1,64 @@
+;Calculate the sum of series of odd numbers from the list of numbers. The length
+;of the list is in memory location 2200H and the series itself begins from memory 
+;location 2201H. Assume the sum to be 8 bit number so you can ignore carry and store 
+;the sum at memory location 2210H.
+
+JMP START 
+
+START:  MVI A,05; LENGTH OF LIST
+	STA 2200;
+
+	; ELEMENTS OF LIST:
+
+	MVI A,01;
+	STA 2201;
+	STA 2203;
+
+	MVI A,03;
+	STA 2202
+	STA 2204
+
+	MVI A,02;
+	STA 2205
+
+	; ACTUAL PROGRAM ;
+
+	LXI H,2201; LOAD FIRST ELEMENT ADDRESS
+
+	LDA 2200;
+	MOV B,A; STORE NUMBER OF ELEMENTS IN B
+
+	MVI C,0; 
+	LXI D,0; CLEAR DE PAIR
+	MVI A,0; CLEAR A
+	DCR B;
+
+REPEAT: MOV A,M; MOVE CONTENTS OF MEMEORY TO A
+	CALL CHECK; CHECK IF ODD
+	JNC DONTADD;
+	MOV A,C;
+	ADD M;
+	MOV C,A;
+
+DONTADD: INX H; INCREMENT HL PAIR
+	DCR B; DEC COUNTER
+	JNZ REPEAT
+	MOV A,C;
+	STA 2210;
+	HLT
+
+CHECK:  CPI 02; COMPARE WITH 2
+	JP ISBIG; 
+		CPI 01; COMPARE WITH 1
+		JNZ EXIT; IF FLAG NOT 0 THEN A IS 0
+			STC; ELSE SET CARRY TO INDICATE ODD
+			JMP EXIT
+
+ISBIG:  SUI 02; A-2=>A
+	JZ EXIT; IS A BECOMES 0 THEN EVEN
+	JP JUMP;
+		STC; ELSE SET CARRY TO INDICATE ODD
+		JMP EXIT; EXIT
+JUMP:	JMP ISBIG
+
+EXIT:	RET  
