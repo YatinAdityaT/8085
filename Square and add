@@ -1,0 +1,46 @@
+;Write 8085 assembly language program to perform the following, a^2 + b^2 , 
+;where a and b are 8-bit binary numbers stored at 2500H and 2501H respectively.
+; Store the result at 2502H.
+
+JMP START 
+
+;STORE VALUES;
+START:  MVI A,08
+	STA 2500
+
+	MVI A,05
+	STA 2501
+
+	;MAIN PROGRAM;
+	LDA 2500
+	CALL SQUARE
+	MOV B,A; SAVE LOWER BYTE
+	MOV C,E; SAVE UPPER BYTE
+
+	LDA 2501
+	CALL SQUARE
+	ADD B; ADD LOWER BYTES
+	STA 2502
+	MVI A,0; CLEAR A
+	JNC JUMP2
+	MVI A,1; INCREMENT A
+
+JUMP2:  ADD E
+	ADD C
+	STA 2503
+	HLT
+
+SQUARE: PUSH B; SAVE BC REGISTER PAIR
+	MVI E,0; CLEAR E FOR CARRY
+	MOV D,A
+	MOV B,A
+	DCR D; REDUCE D
+
+LOOP:	ADD B
+	JNC JUMP1
+	INR E
+
+JUMP1:  DCR D
+	JNZ LOOP
+	POP B; POP BC REG PAIR
+	RET
