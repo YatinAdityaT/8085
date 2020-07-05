@@ -1,0 +1,18 @@
+;Generate a 500Hz square wave from counter 1 using 8253IC.
+; Clock frequency= 1MHz.
+
+; 500Hz = 0.5KHz => TIME PERIOD = 0.5ms
+; TIME PERIOD OF CLK = 1us
+
+; COUNT = 0.5m/1u = 500 IN DECIMAL = 1F4 IN HEX
+
+
+
+JMP START
+START: MVI A,76H; counter 1
+	OUT 83H
+	MVI A,0F4H
+	OUT 81H
+	MVI A,01H
+	OUT 81H
+	HLT
